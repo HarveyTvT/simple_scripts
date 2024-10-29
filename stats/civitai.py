@@ -8,7 +8,6 @@ from prettytable import PrettyTable
 # cursor: 2024-10-31T17:24:19.993Z
 # base_models: ["Flux.1 D", "Flux.1 S"]
 def GetModels(period, cursor, base_models):
-
     params = {
         "limit": 100,
         "cursor": cursor,
@@ -39,14 +38,13 @@ def GetModels(period, cursor, base_models):
         print(response.text)
         return [], None
 
+    results = []
+    cursor = None
     if 'items' in response.json():
         results = response.json()['items']
-        if len(results) == 0:
-            return [], None
-        return results, response.json()['metadata']['nextCursor']
-    else:
-        return [], None
-
+    if 'metadata' in response.json() and 'nextCursor' in response.json()['metadata']:
+        cursor = response.json()['metadata']['nextCursor']
+    return results, cursor
 
 def count_models(period, base_models):
     cursor = datetime.now().strftime("%Y-%m-%dT%H:%M:%S.%fZ")
