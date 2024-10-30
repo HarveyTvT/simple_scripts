@@ -53,12 +53,12 @@ def GetModelsCount(types):
 
 
 flux_count = GetModelsCount([19])
-sd35l_count = GetModelsCount([20])
-sd35m_count = GetModelsCount([21])
+sd35l_count = GetModelsCount([21])
+sd35m_count = GetModelsCount([20])
 pony_count = GetModelsCount([10])
 
 
-table = PrettyTable(['BaseModel',  'All'])
+table = PrettyTable(['BaseModel',  'All'], tilte="Shakker Models")
 table.add_row(['Flux', flux_count])
 table.add_row(['SD 3.5 L', sd35l_count])
 table.add_row(['SD 3.5 M', sd35m_count])

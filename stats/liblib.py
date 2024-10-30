@@ -55,20 +55,20 @@ def GetModelsCount(types, periodTime):
 
 
 week_flux_count = GetModelsCount([19], 'week')
-week_sd35l_count = GetModelsCount([20], 'week')
-week_sd35m_count = GetModelsCount([21], 'week')
+week_sd35l_count = GetModelsCount([21], 'week')
+week_sd35m_count = GetModelsCount([20], 'week')
 week_sd3_count = GetModelsCount([7], 'week')
 week_hunyuan_count = GetModelsCount([8, 12], 'week')
 week_kolors_count = GetModelsCount([11], 'week')
 
 all_flux_count = GetModelsCount([19], 'all')
-all_sd35l_count = GetModelsCount([20], 'all')
-all_sd35m_count = GetModelsCount([21], 'all')
+all_sd35l_count = GetModelsCount([21], 'all')
+all_sd35m_count = GetModelsCount([20], 'all')
 all_sd3_count = GetModelsCount([7], 'all')
 all_hunyuan_count = GetModelsCount([8, 12], 'all')
 all_kolors_count = GetModelsCount([11], 'all')
 
-table = PrettyTable(['BaseModel', 'Week', 'All'])
+table = PrettyTable(['BaseModel', 'Week', 'All'], title="LibLib Stats")
 table.add_row(['Flux', week_flux_count, all_flux_count])
 table.add_row(['SD 3.5 L', week_sd35l_count, all_sd35l_count])
 table.add_row(['SD 3.5 M', week_sd35m_count, all_sd35m_count])
