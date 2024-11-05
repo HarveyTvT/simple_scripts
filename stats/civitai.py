@@ -36,6 +36,7 @@ def GetModels(period, cursor, base_models):
     proxies = {"http": "127.0.0.1:7890"}
     response = requests.get("https://civitai.com/api/v1/models", params=params, proxies=proxies)
     if not response.ok:
+        print(params)
         print(response.text)
         return [], None
 
@@ -48,7 +49,7 @@ def GetModels(period, cursor, base_models):
     return results, cursor
 
 def count_models(period, base_models):
-    cursor = datetime.now().strftime("%Y-%m-%dT%H:%M:%S.%fZ")
+    cursor = datetime.now().strftime("%Y-%m-%dT%H:%M:%S.000Z")
     total_count = 0
     while True:
         models, cursor = GetModels(period, cursor, base_models)
@@ -62,11 +63,11 @@ def count_models(period, base_models):
 
 flux_count = count_models("AllTime", ["Flux.1 D", "Flux.1 S"])
 sd35_count = count_models("AllTime", ["SD 3.5"])
-pony_count = count_models("AllTime", ["Pony"])
+# pony_count = count_models("AllTime", ["Pony"])
 
 
 table = PrettyTable(['BaseModel',  'All'], title="Civitai Models")
 table.add_row(['Flux', flux_count])
 table.add_row(['SD 3.5', sd35_count])
-table.add_row(['Pony', pony_count])
+# table.add_row(['Pony', pony_count])
 print(table)
