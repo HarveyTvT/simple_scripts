@@ -1,14 +1,15 @@
 import requests
 import json
-from datetime import datetime
 import time
-from prettytable import PrettyTable
+from apscheduler.triggers.interval import IntervalTrigger
+from plombery import task, get_logger, Trigger, register_pipeline
 
 
-def GetModelsCount(types):
+def get_shakker_models_count(types):
     current_timestamp = int(time.time() * 1000)
 
-    url = "https://www.shakker.ai/api/www/model/feed/stream?timestamp=" + str(current_timestamp)
+    url = "https://www.shakker.ai/api/www/model/feed/stream?timestamp=" + \
+        str(current_timestamp)
 
     payload = json.dumps({
         "cid": "1730235209237yegdcoul",
@@ -25,7 +26,7 @@ def GetModelsCount(types):
         "vipType": [],
         "modelUsage": [],
         "modelLicense": []
-        })
+    })
     headers = {
         'accept': 'application/json, text/plain, */*',
         'accept-language': 'zh-CN,zh;q=0.9',
@@ -44,7 +45,7 @@ def GetModelsCount(types):
         'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36',
         'webid': '1730235209237yegdcoul',
         'x-language': 'en'
-        }
+    }
     response = requests.request("POST", url, headers=headers, data=payload)
     if 'data' in response.json() and 'total' in response.json()['data']:
         return response.json()['data']['total']
@@ -52,15 +53,31 @@ def GetModelsCount(types):
         return 0
 
 
-flux_count = GetModelsCount([19])
-sd35l_count = GetModelsCount([21])
-sd35m_count = GetModelsCount([20])
-pony_count = GetModelsCount([10])
+@task
+def count_shakker_models_task():
+    logger = get_logger()
 
+    logger.info("统计Shakker模型数量")
+    flux_count = get_shakker_models_count([19])
+    sd35l_count = get_shakker_models_count([21])
+    sd35m_count = get_shakker_models_count([20])
+    pony_count = get_shakker_models_count([10])
 
-table = PrettyTable(['BaseModel',  'All'], tilte="Shakker Models")
-table.add_row(['Flux', flux_count])
-table.add_row(['SD 3.5 L', sd35l_count])
-table.add_row(['SD 3.5 M', sd35m_count])
-table.add_row(['Pony', pony_count])
-print(table)
+    return [
+        {
+            'base model': 'Flux',
+            'count': flux_count
+        },
+        {
+            'base model': 'SD35L',
+            'count': sd35l_count
+        },
+        {
+            'base model': 'SD35M',
+            'count': sd35m_count
+        },
+        {
+            'base model': 'Pony',
+            'count': pony_count
+        }
+    ]

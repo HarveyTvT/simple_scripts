@@ -1,13 +1,13 @@
 import requests
-import json
 from datetime import datetime
-from prettytable import PrettyTable
+
+from plombery import task, get_logger
 
 
 # period: Week, Month
 # cursor: 2024-10-31T17:24:19.993Z
 # base_models: ["Flux.1 D", "Flux.1 S"]
-def GetModels(period, cursor, base_models):
+def get_civitai_models(period, cursor, base_models):
     params = {
         "limit": 100,
         "cursor": cursor,
@@ -33,11 +33,8 @@ def GetModels(period, cursor, base_models):
         "token": "58f763daff342bdb95f67299aabc4753",
         "baseModels": base_models
     }
-    proxies = {"http": "127.0.0.1:7890"}
-    response = requests.get("https://civitai.com/api/v1/models", params=params, proxies=proxies)
+    response = requests.get("https://civitai.com/api/v1/models", params=params)
     if not response.ok:
-        print(params)
-        print(response.text)
         return [], None
 
     results = []
@@ -48,26 +45,33 @@ def GetModels(period, cursor, base_models):
         cursor = response.json()['metadata']['nextCursor']
     return results, cursor
 
-def count_models(period, base_models):
+
+def count_civitai_models(period, base_models):
     cursor = datetime.now().strftime("%Y-%m-%dT%H:%M:%S.000Z")
     total_count = 0
     while True:
-        models, cursor = GetModels(period, cursor, base_models)
+        models, cursor = get_civitai_models(logger, period, cursor, base_models)
         total_count += len(models)
-        print(f"{base_models}, got {len(models)} models, cursor: {cursor}, total: {total_count}")
         if len(models) == 0 or cursor is None:
             break
 
     return total_count
 
 
-flux_count = count_models("AllTime", ["Flux.1 D", "Flux.1 S"])
-sd35_count = count_models("AllTime", ["SD 3.5"])
-# pony_count = count_models("AllTime", ["Pony"])
+@task
+def count_civitai_models_task():
+    logger = get_logger()
+    logger.debug("Fetch civitai models count")
 
-
-table = PrettyTable(['BaseModel',  'All'], title="Civitai Models")
-table.add_row(['Flux', flux_count])
-table.add_row(['SD 3.5', sd35_count])
-# table.add_row(['Pony', pony_count])
-print(table)
+    flux_count =  count_civitai_models(logger, "AllTime", ["Flux.1 D", "Flux.1 S"])
+    sd35_count = count_civitai_models(logger, "AllTime", ["SD 3.5"])
+    return [
+        {
+            'base model': 'Flux',
+            'count': flux_count
+        },
+        {
+            'base model': 'SD 3.5',
+            'count': sd35_count
+        }
+    ]

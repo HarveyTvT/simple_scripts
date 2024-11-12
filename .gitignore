@@ -1,1 +1,3 @@
 .conda
+.data
+*.db

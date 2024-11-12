@@ -1,10 +1,10 @@
 import requests
 import json
 import time
-from prettytable import PrettyTable
+from plombery import task, get_logger
 
 
-def GetModelsCount(types, periodTime):
+def get_liblib_model_count(types, periodTime):
     current_timestamp = int(time.time() * 1000)
 
     url = "https://www.liblib.art/api/www/model/feed/stream?timestamp=" + \
@@ -54,25 +54,51 @@ def GetModelsCount(types, periodTime):
         return 0
 
 
-week_flux_count = GetModelsCount([19], 'week')
-week_sd35l_count = GetModelsCount([21], 'week')
-week_sd35m_count = GetModelsCount([20], 'week')
-week_sd3_count = GetModelsCount([7], 'week')
-week_hunyuan_count = GetModelsCount([8, 12], 'week')
-week_kolors_count = GetModelsCount([11], 'week')
+@task
+def count_liblib_models_task():
+    week_flux_count = get_liblib_model_count([19], 'week')
+    week_sd35l_count = get_liblib_model_count([21], 'week')
+    week_sd35m_count = get_liblib_model_count([20], 'week')
+    week_sd3_count = get_liblib_model_count([7], 'week')
+    week_hunyuan_count = get_liblib_model_count([8, 12], 'week')
+    week_kolors_count = get_liblib_model_count([11], 'week')
 
-all_flux_count = GetModelsCount([19], 'all')
-all_sd35l_count = GetModelsCount([21], 'all')
-all_sd35m_count = GetModelsCount([20], 'all')
-all_sd3_count = GetModelsCount([7], 'all')
-all_hunyuan_count = GetModelsCount([8, 12], 'all')
-all_kolors_count = GetModelsCount([11], 'all')
+    all_flux_count = get_liblib_model_count([19], 'all')
+    all_sd35l_count = get_liblib_model_count([21], 'all')
+    all_sd35m_count = get_liblib_model_count([20], 'all')
+    all_sd3_count = get_liblib_model_count([7], 'all')
+    all_hunyuan_count = get_liblib_model_count([8, 12], 'all')
+    all_kolors_count = get_liblib_model_count([11], 'all')
 
-table = PrettyTable(['BaseModel', 'Week', 'All'], title="LibLib Stats")
-table.add_row(['Flux', week_flux_count, all_flux_count])
-table.add_row(['SD 3.5 L', week_sd35l_count, all_sd35l_count])
-table.add_row(['SD 3.5 M', week_sd35m_count, all_sd35m_count])
-table.add_row(['SD 3', week_sd3_count, all_sd3_count])
-table.add_row(['Hunyuan', week_hunyuan_count, all_hunyuan_count])
-table.add_row(['Kolors', week_kolors_count, all_kolors_count])
-print(table)
+    return [
+        {
+            'base model': 'Flux',
+            'week': week_flux_count,
+            'all': all_flux_count
+        },
+        {
+            'base model': 'SD35L',
+            'week': week_sd35l_count,
+            'all': all_sd35l_count
+        },
+        {
+            'base model': 'SD35M',
+            'week': week_sd35m_count,
+            'all': all_sd35m_count
+        },
+        {
+            'base model': 'SD3',
+            'week': week_sd3_count,
+            'all': all_sd3_count
+        },
+        {
+            'base model': 'Hunyuan',
+            'week': week_hunyuan_count,
+            'all': all_hunyuan_count
+        },
+        {
+            'base model': 'Kolors',
+            'week': week_kolors_count,
+            'all': all_kolors_count
+        }
+    ]
