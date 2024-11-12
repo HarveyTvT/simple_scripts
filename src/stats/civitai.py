@@ -50,7 +50,7 @@ def count_civitai_models(period, base_models):
     cursor = datetime.now().strftime("%Y-%m-%dT%H:%M:%S.000Z")
     total_count = 0
     while True:
-        models, cursor = get_civitai_models(logger, period, cursor, base_models)
+        models, cursor = get_civitai_models(period, cursor, base_models)
         total_count += len(models)
         if len(models) == 0 or cursor is None:
             break
@@ -60,11 +60,8 @@ def count_civitai_models(period, base_models):
 
 @task
 def count_civitai_models_task():
-    logger = get_logger()
-    logger.debug("Fetch civitai models count")
-
-    flux_count =  count_civitai_models(logger, "AllTime", ["Flux.1 D", "Flux.1 S"])
-    sd35_count = count_civitai_models(logger, "AllTime", ["SD 3.5"])
+    flux_count =  count_civitai_models("AllTime", ["Flux.1 D", "Flux.1 S"])
+    sd35_count = count_civitai_models("AllTime", ["SD 3.5"])
     return [
         {
             'base model': 'Flux',
