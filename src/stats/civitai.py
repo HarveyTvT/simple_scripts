@@ -34,7 +34,7 @@ def get_civitai_models(period, cursor, base_models):
         'sec-ch-ua-platform': "Linux",
         'user-agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/129.0.0.0 Safari/537.36',
         'X-Client': 'web',
-        'x-client-date': '1731471950094',
+        'x-client-date': str(round(time.time() * 1000)),
         'x-client-version': '5.0.249',
         'x-fingerprint': 'c6cb00d14274be85fbb3f649d3b48d3eca049cbdf12344c731b4b572e98511e19a8a5e9cbad0beb59de6602bb2cc44a1'
     }
