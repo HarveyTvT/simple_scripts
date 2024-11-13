@@ -1,5 +1,6 @@
 import requests
 import json
+import time
 import urllib.parse
 from datetime import datetime, timedelta
 
@@ -25,7 +26,20 @@ def get_civitai_models(period, cursor, base_models):
     }
     params_str = json.dumps(params)
     params_str = urllib.parse.quote_plus(params_str)
-    response = requests.get("https://civitai.com/api/trpc/model.getAll?input="+params_str)
+
+    headers = {
+        "content-type": "application/json",
+        "referer": "https://civitai.com/",
+        "sec-ch-ua": '"Google Chrome";v="129", "Not=A?Brand";v="8", "Chromium";v="129"',
+        'sec-ch-ua-platform': "Linux",
+        'user-agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/129.0.0.0 Safari/537.36',
+        'X-Client': 'web',
+        'x-client-date': '1731471950094',
+        'x-client-version': '5.0.249',
+        'x-fingerprint': 'c6cb00d14274be85fbb3f649d3b48d3eca049cbdf12344c731b4b572e98511e19a8a5e9cbad0beb59de6602bb2cc44a1'
+    }
+    response = requests.get(
+        "https://civitai.com/api/trpc/model.getAll?input="+params_str, headers=headers)
     if not response.ok:
         return [], None
 
@@ -49,6 +63,7 @@ def count_civitai_models(period, base_models):
         print("new models: ", len(models), "total count: ", total_count)
         if len(models) == 0 or cursor is None:
             break
+        time.sleep(0.2)
 
     return total_count
 
@@ -57,12 +72,10 @@ def count_civitai_models(period, base_models):
 def count_civitai_models_task():
     logger = get_logger()
 
-    flux_count =  count_civitai_models("AllTime", ["Flux.1 D", "Flux.1 S"])
-    logger.info("flux count: %d", flux_count)
+    flux_count = count_civitai_models("AllTime", ["Flux.1 D", "Flux.1 S"])
 
     sd35_count = count_civitai_models(
         "AllTime", ["SD 3.5", "SD 3.5 Medium", "SD 3.5 Large", "SD 3.5 Large Turbo"])
-    logger.info("sd35 count: %d", sd35_count)
 
     return [
         {
