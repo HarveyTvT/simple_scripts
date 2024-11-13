@@ -61,7 +61,7 @@ def count_civitai_models(period, base_models):
 @task
 def count_civitai_models_task():
     flux_count =  count_civitai_models("AllTime", ["Flux.1 D", "Flux.1 S"])
-    sd35_count = count_civitai_models("AllTime", ["SD 3.5"])
+    sd35_count = count_civitai_models("AllTime", ["SD 3.5", "SD 3.5 Medium", "SD 3.5 Large", "SD 3.5 Large Turbo"])
     return [
         {
             'base model': 'Flux',
