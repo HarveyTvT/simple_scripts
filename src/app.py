@@ -49,16 +49,8 @@ register_pipeline(
 
 register_pipeline(
     id="civitai排行榜统计",
-    description="civitai排行榜统计",
+    description="参数直接贴civitai排行榜链接，比如: https://civitai.com/leaderboard/flux?board=legend",
     tasks=[civitai.get_civitai_leaderboard_task],
-    triggers=[
-        Trigger(
-            id="weekly",
-            name="每周",
-            description="每周统计一次",
-            schedule=IntervalTrigger(weeks=1)
-        )
-    ],
     params=InputParams
 )
 

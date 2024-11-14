@@ -65,7 +65,7 @@ class CivitaiApi:
     # Flux排行榜：https://civitai.com/leaderboard/flux,  flux
     # SDXL排行榜：https://civitai.com/leaderboard/sdxl, sdxl
     # Pony排行榜：https://civitai.com/leaderboard/pony, pony
-    def get_leaderboard_users(self, board_id: str):
+    def get_leaderboard_users(self, board_id: str, is_legend: bool):
         params = {
             "json": {
                 "id": board_id,
@@ -73,7 +73,11 @@ class CivitaiApi:
             }
         }
 
-        items = self.call_trpc("leaderboard.getLeaderboard", params)
+        method = "leaderboard.getLeaderboard"
+        if is_legend:
+            method = "leaderboard.getLeadboardLegends"
+
+        items = self.call_trpc(method, params)
         if items is None:
             return []
 
@@ -128,30 +132,34 @@ def count_civitai_models_task():
 
 
 class InputParams(BaseModel):
-    board_url: str # https://civitai.com/leaderboard/sdxl
+    board_url: str  # https://civitai.com/leaderboard/sdxl
+
 
 @task
 def get_civitai_leaderboard_task(params: InputParams):
-    logger = get_logger()
-    board = params.board_url.split('/')[-1]
-    logger.info(f"Get Civitai leaderboard: {board}")
+    parsed_url = urllib.parse.urlparse(params.board_url)
+    board = parsed_url.path.split('/')[-1]
+    is_legend = parsed_url.query == "board=legend"
 
     civitaiapi = CivitaiApi()
-    new_creators = civitaiapi.get_leaderboard_users(board)
-    for creator in new_creators:
+    results = civitaiapi.get_leaderboard_users(board, is_legend)
+
+
+    for creator in results:
         creator_info = civitaiapi.get_creator(creator['username'])
         if creator_info is None:
             continue
         if 'links' in creator_info:
-            creator['links'] = '\n'.join(list(x['url'] for x in creator_info['links']))
+            creator['links'] = '\n'.join(
+                list(x['url'] for x in creator_info['links']))
         if 'stats' in creator_info:
-            creator['download_count'] = creator_info['stats']['downloadCountAllTime']
-            creator['favorite_count'] = creator_info['stats']['favoriteCountAllTime']
-            creator['thumbsup_count'] = creator_info['stats']['thumbsUpCountAllTime']
-            creator['follower_count'] = creator_info['stats']['followerCountAllTime']
-            creator['generation_count'] = creator_info['stats']['generationCountAllTime']
+            creator['download_count'] = creator_info['stats']['downloadCountAllTime'] if 'downloadCountAllTime' in creator_info['stats'] else 0
+            creator['favorite_count'] = creator_info['stats']['favoriteCountAllTime'] if 'favoriteCountAllTime' in creator_info['stats'] else 0
+            creator['thumbsup_count'] = creator_info['stats']['thumbsUpCountAllTime'] if 'thumbsUpCountAllTime' in creator_info['stats'] else 0
+            creator['follower_count'] = creator_info['stats']['followerCountAllTime'] if 'followerCountAllTime' in creator_info['stats'] else 0
+            creator['generation_count'] = creator_info['stats']['generationCountAllTime'] if 'generationCountAllTime' in creator_info['stats'] else 0
         if '_count' in creator_info:
-            creator['model_count'] = creator_info['_count']['models']
+            creator['model_count'] = creator_info['_count']['models'] if 'models' in creator_info['_count'] else 0
         time.sleep(0.1)
 
-    return new_creators
+    return results
