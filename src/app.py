@@ -1,11 +1,12 @@
 from stats import civitai, liblib, shakker
+from stats.civitai import InputParams
 from apscheduler.triggers.interval import IntervalTrigger
 from plombery import  Trigger, register_pipeline
 
 
 register_pipeline(
     id="Civitai模型统计",
-    description="统计Civitai全量flux和sd35模型数量",
+    description="Civitai模型统计",
     tasks=[civitai.count_civitai_models_task],
     triggers=[
         Trigger(
@@ -45,6 +46,21 @@ register_pipeline(
     ]
 )
 
+
+register_pipeline(
+    id="civitai排行榜统计",
+    description="civitai排行榜统计",
+    tasks=[civitai.get_civitai_leaderboard_task],
+    triggers=[
+        Trigger(
+            id="weekly",
+            name="每周",
+            description="每周统计一次",
+            schedule=IntervalTrigger(weeks=1)
+        )
+    ],
+    params=InputParams
+)
 
 if __name__ == '__main__':
     import uvicorn
