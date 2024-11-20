@@ -116,14 +116,14 @@ def count_civitai_models_task():
         "AllTime", ["SD 3.5", "SD 3.5 Medium", "SD 3.5 Large", "SD 3.5 Large Turbo"])
     logger.info(f"SD 3.5 count: {sd35_count}")
 
-    # flux_count = count_civitai_models("AllTime", ["Flux.1 D", "Flux.1 S"])
-    # logger.info(f"Flux count: {flux_count}")
+    flux_count = count_civitai_models("AllTime", ["Flux.1 D", "Flux.1 S"])
+    logger.info(f"Flux count: {flux_count}")
 
     return [
-        # {
-        #     'base model': 'Flux',
-        #     'count': flux_count
-        # },
+        {
+            'base model': 'Flux',
+            'count': flux_count
+        },
         {
             'base model': 'SD 3.5',
             'count': sd35_count
