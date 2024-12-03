@@ -116,6 +116,9 @@ def count_civitai_models_task():
         "AllTime", ["SD 3.5", "SD 3.5 Medium", "SD 3.5 Large", "SD 3.5 Large Turbo"])
     logger.info(f"SD 3.5 count: {sd35_count}")
 
+    illustrious_count = count_civitai_models("AllTime", ["Illustrious"])
+    logger.info(f"Illustrious count: {illustrious_count}")
+
     flux_count = count_civitai_models("AllTime", ["Flux.1 D", "Flux.1 S"])
     logger.info(f"Flux count: {flux_count}")
 
@@ -127,6 +130,10 @@ def count_civitai_models_task():
         {
             'base model': 'SD 3.5',
             'count': sd35_count
+        },
+        {
+            'base model': 'Illustrious',
+            'count': illustrious_count
         }
     ]
 
