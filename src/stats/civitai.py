@@ -53,6 +53,8 @@ class CivitaiApi:
             }
         }
         respData = self.call_trpc("model.getAll", params)
+        if respData is None:
+            return [], None
         if 'items' in respData:
             results = respData['items']
         if 'nextCursor' in respData:
@@ -112,12 +114,12 @@ def count_civitai_models(period, base_models):
 def count_civitai_models_task():
     logger = get_logger()
 
+    illustrious_count = count_civitai_models("AllTime", ["Illustrious"])
+    logger.info(f"Illustrious count: {illustrious_count}")
+
     sd35_count = count_civitai_models(
         "AllTime", ["SD 3.5", "SD 3.5 Medium", "SD 3.5 Large", "SD 3.5 Large Turbo"])
     logger.info(f"SD 3.5 count: {sd35_count}")
-
-    illustrious_count = count_civitai_models("AllTime", ["Illustrious"])
-    logger.info(f"Illustrious count: {illustrious_count}")
 
     flux_count = count_civitai_models("AllTime", ["Flux.1 D", "Flux.1 S"])
     logger.info(f"Flux count: {flux_count}")
