@@ -106,7 +106,7 @@ def count_civitai_models(period, base_models):
         print("new models: ", len(models), "total count: ", total_count)
         if len(models) == 0 or cursor is None:
             break
-        time.sleep(0.2)
+        time.sleep(0.5)
     return total_count
 
 
