@@ -47,6 +47,8 @@ def get_liblib_model_count(types, periodTime):
         'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36',
         'webid': '1730236539008ygusxpor'
     }
+    # 忽略第一次返回
+    requests.request("POST", url, headers=headers, data=payload)
     response = requests.request("POST", url, headers=headers, data=payload)
     if 'data' in response.json() and 'total' in response.json()['data']:
         return response.json()['data']['total']
