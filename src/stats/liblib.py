@@ -11,7 +11,7 @@ def get_liblib_model_count(types, periodTime):
         str(current_timestamp)
 
     payload = json.dumps({
-        "isHome": True,
+        "isHome": False,
         "cid": "1730236539008ygusxpor",
         "page": 1,
         "pageSize": 30,
