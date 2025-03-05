@@ -1,5 +1,5 @@
 from stats import civitai, liblib, shakker
-from stats.civitai import InputParams
+from stats.civitai import InputParams, GetCreatorModelsParams
 from apscheduler.triggers.interval import IntervalTrigger
 from plombery import  Trigger, register_pipeline
 
@@ -52,6 +52,13 @@ register_pipeline(
     description="参数直接贴civitai排行榜链接，比如: https://civitai.com/leaderboard/flux?board=legend",
     tasks=[civitai.get_civitai_leaderboard_task],
     params=InputParams
+)
+
+register_pipeline(
+    id="civitai获取用户所有模型链接",
+    description="参数直接贴c站用户id，比如: Void91",
+    tasks=[civitai.get_creator_models],
+    params=GetCreatorModelsParams
 )
 
 if __name__ == '__main__':

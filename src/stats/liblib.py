@@ -64,6 +64,7 @@ def count_liblib_models_task():
     week_sd3_count = get_liblib_model_count([7], 'week')
     week_hunyuan_count = get_liblib_model_count([8, 12], 'week')
     week_kolors_count = get_liblib_model_count([11], 'week')
+    week_illustrious_count = get_liblib_model_count([22], 'week')
 
     all_flux_count = get_liblib_model_count([19], 'all')
     all_sd35l_count = get_liblib_model_count([21], 'all')
@@ -71,6 +72,8 @@ def count_liblib_models_task():
     all_sd3_count = get_liblib_model_count([7], 'all')
     all_hunyuan_count = get_liblib_model_count([8, 12], 'all')
     all_kolors_count = get_liblib_model_count([11], 'all')
+    all_illustrious_count = get_liblib_model_count([22], 'all')
+
 
     return [
         {
@@ -102,5 +105,10 @@ def count_liblib_models_task():
             'base model': 'Kolors',
             'week': week_kolors_count,
             'all': all_kolors_count
-        }
+        },
+        {
+            'base model': 'Illustrious',
+            'week': week_illustrious_count,
+            'all': all_illustrious_count
+        },
     ]
