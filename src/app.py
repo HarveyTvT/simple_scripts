@@ -1,6 +1,6 @@
 from stats import civitai, liblib, shakker
 from stats.civitai import InputParams, GetCreatorModelsParams
-from apscheduler.triggers.interval import IntervalTrigger
+from apscheduler.triggers.interval import CronTrigger
 from plombery import  Trigger, register_pipeline
 
 
@@ -13,7 +13,7 @@ register_pipeline(
             id="weekly",
             name="每周",
             description="每周统计一次",
-            schedule=IntervalTrigger(weeks=1)
+            schedule=CronTrigger(day_of_week=2,hour=12)
         )
     ]
 )
@@ -27,7 +27,7 @@ register_pipeline(
             id="weekly",
             name="每周",
             description="每周统计一次",
-            schedule=IntervalTrigger(weeks=1)
+            schedule=CronTrigger(day_of_week=2,hour=12)
         )
     ]
 )
@@ -41,7 +41,7 @@ register_pipeline(
             id="weekly",
             name="每周",
             description="每周统计一次",
-            schedule=IntervalTrigger(weeks=1)
+            schedule=CronTrigger(day_of_week=2,hour=12)
         )
     ]
 )
