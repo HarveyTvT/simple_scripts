@@ -1,6 +1,6 @@
 from stats import civitai, liblib, shakker
 from stats.civitai import InputParams, GetCreatorModelsParams
-from apscheduler.triggers.interval import CronTrigger
+from apscheduler.triggers.cron import CronTrigger
 from plombery import  Trigger, register_pipeline
 
 
