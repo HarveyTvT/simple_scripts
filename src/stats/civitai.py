@@ -128,6 +128,13 @@ def count_civitai_models_task():
     flux_count = count_civitai_models("AllTime", ["Flux.1 D", "Flux.1 S"])
     logger.info(f"Flux count: {flux_count}")
 
+
+    hunyuan_video_count = count_civitai_models("AllTime", ["Hunyuan Video"])
+    logger.info(f"Hunyuan Video count: {hunyuan_video_count}")
+
+    wan_video_count = count_civitai_models("AllTime", ["Wan Video"])
+    logger.info(f"Wan Video count: {wan_video_count}")
+
     return [
         {
             'base model': 'Flux',
@@ -140,6 +147,14 @@ def count_civitai_models_task():
         {
             'base model': 'Illustrious',
             'count': illustrious_count
+        },
+        {
+            'base model': 'Hunyuan Video',
+            'count': hunyuan_video_count
+        },
+        {
+            'base model': 'Wan Video',
+            'count': wan_video_count
         }
     ]
 
